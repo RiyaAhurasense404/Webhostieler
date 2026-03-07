@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router-dom"
 import { useWishList } from "../../hooks/useWishList"
+import { formatCurrency } from "../../utils/formatCurrency"
 
 const HotelCard = ({ hotel }) => {
   const navigate = useNavigate()
@@ -11,7 +12,7 @@ const HotelCard = ({ hotel }) => {
       <h3>{hotel.name}</h3>
       <p>{hotel.wishlistName}</p>
       <p>{hotel.reviewScore}</p>
-      <p>{hotel.priceBreakdown.grossPrice.amountRounded}</p>
+      <p>{formatCurrency(hotel.priceBreakdown.grossPrice.value)}</p>
       <button onClick={(e) => {
         e.stopPropagation()
         dispatch({ type: "Add", payload: hotel })
