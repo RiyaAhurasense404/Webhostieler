@@ -1,4 +1,6 @@
 import { createContext, useState } from "react";
+import { saveToStorage, getFromStorage, removeFromStorage } from "../utils/localStorage"
+
 
 export const AuthContext = createContext(null);
 
@@ -9,8 +11,8 @@ const DUMMY_USER = {
 
 export const AuthProvider = ({children}) => {
     const [user, setUser] = useState(()=>{
-        const savedUser = localStorage.getItem("user");
-        return savedUser ? JSON.parse(savedUser) : null;
+        const savedUser = getFromStorage("user")
+        return savedUser || null;
     });
 
     
@@ -18,7 +20,7 @@ export const AuthProvider = ({children}) => {
     const login = (username, password) => {
         if(username === DUMMY_USER.username && password === DUMMY_USER.password){
             setUser(DUMMY_USER);
-            localStorage.setItem("user", JSON.stringify(DUMMY_USER))
+            saveToStorage("user", DUMMY_USER)
             return true;
         }
         return false;
@@ -26,7 +28,7 @@ export const AuthProvider = ({children}) => {
 
     const logout = () => {
         setUser(null);
-        localStorage.removeItem("user");
+        removeFromStorage("user")
     }
 
     return(
