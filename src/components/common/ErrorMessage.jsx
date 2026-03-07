@@ -1,11 +1,4 @@
-import React from 'react'
-
-const ErrorMessage = () => {
-  return (
-    <div>
-      
-    </div>
-  )
+const ErrorMessage = ({ message }) => {
+  return <p>Error: {message} ❌</p>
 }
-
 export default ErrorMessage

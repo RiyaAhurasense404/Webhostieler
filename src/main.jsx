@@ -20,9 +20,12 @@ createRoot(document.getElementById("root")).render(
   </StrictMode>
 );
 
-// import { fetchHotels } from "./api/hotelsApi"
+// import { fetchHotelDetail } from "./api/hotelsApi"
 
 // fetchHotels({
 //   dest_id: "-2092174",
 //   dest_type: "city"
 // }).then(data => console.log(data))
+
+// fetchHotelDetail({ hotel_id: "15914332" })
+//   .then(data => console.log(data?.data?.block[0]?.block_id))
