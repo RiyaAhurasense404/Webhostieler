@@ -23,7 +23,7 @@ const HotelsPage = () => {
     fetchDestId()
   }, [fetchDestId])
 
-  const { data,isError, isLoading } = useHotelsQuery({
+  const { data,isError, isLoading,  error } = useHotelsQuery({
     dest_id: destId,
     dest_type: "city",
     price_max: debouncedPrice
