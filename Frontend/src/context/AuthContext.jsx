@@ -19,7 +19,10 @@ export const AuthProvider = ({ children }) => {
       saveToStorage("user", userData)
       return true
     } catch (err) {
-      return false
+      return{
+        success: false, 
+      error: err.response?.data?.error || "Kuch gadbad ho gayi!" 
+      }
     }
   }
 

@@ -1,7 +1,7 @@
 const express = require("express")
 const cors = require("cors")
 require("dotenv").config()
-const db = require("./db") 
+const db = require("./db")
 
 const app = express()
 app.use(cors())
@@ -17,7 +17,10 @@ app.get("/", (req, res) => {
   res.json({ message: "Server chal raha hai! 🚀" })
 })
 
-const PORT = process.env.PORT || 5000
+const errorHandler = require("./middleware/errorHandler")
+app.use(errorHandler)
+
+const PORT = process.env.PORT || 8000
 app.listen(PORT, () => {
   console.log(`Server port ${PORT} pe chal raha hai!`)
 })

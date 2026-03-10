@@ -17,7 +17,7 @@ const LoginPage = () => {
   const onSubmit = async (data) => {
     const success = await login(data.username, data.password)
     if(success) navigate("/hotels")
-    else setLoginFailed(true)
+    else setLoginFailed(result.error)
   }
 
   return (
