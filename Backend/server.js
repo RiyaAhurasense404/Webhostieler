@@ -10,6 +10,9 @@ app.use(express.json())
 const hotelsRouter = require("./routes/hotels")
 app.use("/api/hotels", hotelsRouter)
 
+const authRouter = require("./routes/auth")
+app.use("/api/auth", authRouter)
+
 app.get("/", (req, res) => {
   res.json({ message: "Server chal raha hai! 🚀" })
 })

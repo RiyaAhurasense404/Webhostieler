@@ -1,44 +1,36 @@
-import { createContext, useState } from "react";
+import { createContext, useState } from "react"
 import { saveToStorage, getFromStorage, removeFromStorage } from "../utils/localStorage"
+import axios from "axios"
 
+export const AuthContext = createContext(null)
 
-export const AuthContext = createContext(null);
+export const AuthProvider = ({ children }) => {
+  const [user, setUser] = useState(() => getFromStorage("user") || null)
 
-const DUMMY_USER = {
-    username: "@@@@",
-    password: "12345"
-}
-
-export const AuthProvider = ({children}) => {
-    const [user, setUser] = useState(()=>{
-        const savedUser = getFromStorage("user")
-        return savedUser || null;
-    });
-
-    
-
-    const login = (username, password) => {
-        if(username === DUMMY_USER.username && password === DUMMY_USER.password){
-            setUser(DUMMY_USER);
-            saveToStorage("user", DUMMY_USER)
-            return true;
-        }
-        return false;
+  const login = async (username, password) => {
+    try {
+      const response = await axios.post("http://localhost:8000/api/auth/login", {
+        username,
+        password
+      })
+      const { token, username: uname } = response.data
+      const userData = { username: uname, token }
+      setUser(userData)
+      saveToStorage("user", userData)
+      return true
+    } catch (err) {
+      return false
     }
+  }
 
-    const logout = () => {
-        setUser(null);
-        removeFromStorage("user")
-    }
+  const logout = () => {
+    setUser(null)
+    removeFromStorage("user")
+  }
 
-    return(
-        <AuthContext.Provider value={{user, login, logout}}>
-            {children}
-        </AuthContext.Provider>
-    )
+  return (
+    <AuthContext.Provider value={{ user, login, logout }}>
+      {children}
+    </AuthContext.Provider>
+  )
 }
-
-
-
-
-

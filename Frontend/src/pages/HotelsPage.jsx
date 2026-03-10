@@ -10,6 +10,7 @@ const HotelsPage = () => {
     city: debouncedCity,
     max_price: debouncedPrice
   })
+  
 
   if(isLoading) return <p>Loading...</p>
   if(isError) return <p>{error?.message}</p>
@@ -21,4 +22,6 @@ const HotelsPage = () => {
     </div>
   )
 }
+
+
 export default HotelsPage

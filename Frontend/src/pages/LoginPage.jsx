@@ -9,28 +9,26 @@ const LoginPage = () => {
   const { login } = useAuth()
   const navigate = useNavigate()
   const [loginFailed, setLoginFailed] = useState(false)
-  
-  const { register, handleSubmit, formState: { errors } } = useForm({
+
+  const { register, handleSubmit } = useForm({
     resolver: zodResolver(loginSchema)
   })
-  console.log(errors)
 
-
-  const onSubmit = (data) => {
-    console.log("submit successful", data)
-    const success = login(data.username, data.password)
+  const onSubmit = async (data) => {
+    const success = await login(data.username, data.password)
     if(success) navigate("/hotels")
-      else{
-        setLoginFailed(true)
-    }
+    else setLoginFailed(true)
   }
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
-      <input {...register("username")} placeholder="Enter: @@@@" />
-      <input {...register("password")} type="password" placeholder="Enter: 12345" />
-      {loginFailed && <p style={{color: "red"}}>Galat username ya password! ❌</p>}
+      <input {...register("username")} placeholder="Username" />
+      <input {...register("password")} type="password" placeholder="Password" />
+      {loginFailed && <p style={{color: "red"}}>wrong username or password! ❌</p>}
       <button type="submit">Login</button>
+      <p onClick={() => navigate("/register")}>
+        Account Not Found? Register Now!
+      </p>
     </form>
   )
 }

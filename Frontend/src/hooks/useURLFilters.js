@@ -5,7 +5,7 @@ export const useURLFilters = () => {
   const [searchParams, setSearchParams] = useSearchParams()
 
   const city = searchParams.get("city")
-  const price = searchParams.get("price")
+  const price = searchParams.get("max_price")
 
   const debouncedCity = useDebounce(city, 1000)
   const debouncedPrice = useDebounce(price, 1000)
