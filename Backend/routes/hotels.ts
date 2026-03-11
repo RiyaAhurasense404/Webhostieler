@@ -5,4 +5,4 @@ const { getAllHotels, getHotelById , filterByCity, filterByPrice  } = require(".
 router.get("/", getAllHotels)
 router.get("/:id", getHotelById )
 
-module.exports = router
+export default router

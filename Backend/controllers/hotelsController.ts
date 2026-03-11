@@ -1,95 +1,58 @@
-const db = require("../db")
+import { Request, Response, NextFunction } from "express"
+import { getAllHotelsService, getHotelByIdService } from "../services/hotelsService"
 
-const getAllHotels = async (req, res, next) => {
+interface CustomError extends Error {
+  status?: number
+}
+
+export const getAllHotels = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   console.log("getAllHotels called!")
   try {
-    const { city, max_price } = req.query
+    const { city, max_price } = req.query as { city?: string; max_price?: string }
 
-    if(max_price && isNaN(max_price)) {
-      const err = new Error("Price sirf number hona chahiye! 🔢")
+    if(max_price && isNaN(Number(max_price))) {
+      const err: CustomError = new Error("Price sirf number hona chahiye! 🔢")
       err.status = 400
       throw err
     }
 
-    if(city && !isNaN(city)) {
-      const err = new Error("City sirf text hona chahiye! 🔤")
+    if(city && !isNaN(Number(city))) {
+      const err: CustomError = new Error("City sirf text hona chahiye! 🔤")
       err.status = 400
       throw err
     }
 
-    let query = "SELECT id, name, city, price, image_url FROM hotels WHERE 1=1"
-    const params = []
+    const hotels = await getAllHotelsService(
+      city as string | undefined,
+      max_price ? Number(max_price) : undefined
+    )
 
-    if(city) {
-      query += " AND city = ?"
-      params.push(city)
-    }
-    if(max_price) {
-      query += " AND price <= ?"
-      params.push(Number(max_price))
-    }
+    res.json({ data: hotels })
 
-    db.query(query, params, (err, results) => {
-      try {
-        if(err) throw err
-        if(results.length === 0) {
-          const err = new Error("Koi hotel nahi mila is city mein! 🏨")
-          err.status = 404
-          throw err
-        }
-        res.json({ data: results })
-      } catch(err) {
-        next(err)
-      } finally {
-        console.log("getAllHotels query complete!")
-      }
-    })
   } catch(err) {
     next(err)
   } finally {
-    console.log("getAllHotels function complete!")
+    console.log("getAllHotels complete!")
   }
 }
 
-const getHotelById = async (req, res, next) => {
+export const getHotelById = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   console.log("getHotelById called!")
   try {
-    const { id } = req.params
+    const { id } = req.params as {id: string}
 
-    if(!id) {
-      const err = new Error("ID dena zaroori hai! ❌")
+    if(isNaN(Number(id))) {
+      const err: CustomError = new Error("ID sirf number hona chahiye! 🔢")
       err.status = 400
       throw err
     }
 
-    if(isNaN(id)) {
-      const err = new Error("ID should be a number! 🔢")
-      err.status = 400
-      throw err
-    }
+    const hotel = await getHotelByIdService(id)
+    res.json({ data: hotel })
 
-    db.query("SELECT * FROM hotels WHERE id = ?", [id], (err, results) => {
-      try {
-        if(err) throw err
-
-        if(!results[0]) {
-          const err = new Error("Hotel nahi mila! 🏨")
-          err.status = 404
-          throw err
-        }
-
-        res.json({ data: results[0] })
-      } catch(err) {
-        next(err)
-      } finally {
-        console.log("getHotelById query complete!")
-      }
-    })
   } catch(err) {
     next(err)
   } finally {
-    console.log("getHotelById function complete!")
+    console.log("getHotelById complete!")
   }
 }
-
-module.exports = { getAllHotels, getHotelById }
